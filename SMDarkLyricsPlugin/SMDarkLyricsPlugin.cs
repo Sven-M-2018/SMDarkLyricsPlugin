@@ -23,7 +23,7 @@ namespace SMDarkLyricsPlugin
     public class SMDarkLyricsPlugin : IPlugin, ILyrics
     {
         public string Name => "SMDarkLyrics";
-        public string Version => "0.1.0";
+        public string Version => "0.2.0";
 
         public async Task GetLyrics(PluginLyricsInput input, CancellationToken ct, Action<PluginLyricsResult> updateAction)
         {
@@ -95,7 +95,10 @@ namespace SMDarkLyricsPlugin
                 }
             }
             lyrics = lyrics.Trim().Replace("\n", "<br/>\n").Replace("<br/>\n<br/>\n", "</p>\n<p>");
-            return "<p>" + lyrics + "</p>";
+            lyrics = lyrics.Replace("<p><br/>\n", "<p>\n");
+            lyrics = Regex.Replace(lyrics, @"\s+<br/>", "<br/>", RegexOptions.IgnoreCase);
+            lyrics = Regex.Replace(lyrics, @"\s+<p/>", "<p/>", RegexOptions.IgnoreCase);
+            return "<p>" + lyrics.Trim() + "</p>\n<p><i><sub>powered by Dark Lyrics</sub></i></p>";
         }
 
         private static string CleanLine(String line)
